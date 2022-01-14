@@ -79,7 +79,7 @@ func ex8() {
 	timenow := "${time.Now().Unix()}"
 	for n := 0; n < 5; {
 		fmt.Println("Time: ", timenow)
-		time.Sleep(1 * time.Second)
+		time.Sleep(100 * time.Millisecond)
 		n++
 
 	}
@@ -87,7 +87,7 @@ func ex8() {
 
 func ex9() {
 	ch := make(chan int)
-	time.AfterFunc(5*time.Second, func() {
+	time.AfterFunc(100*time.Millisecond, func() {
 
 		ch <- 10
 	})
@@ -97,7 +97,7 @@ func ex9() {
 			fmt.Println("i'm study", i)
 			return
 		default:
-			fmt.Println("time to wait")
+			fmt.Println("wait")
 			time.Sleep(1 * time.Second)
 		}
 	}
