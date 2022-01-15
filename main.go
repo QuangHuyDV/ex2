@@ -7,21 +7,20 @@ import (
 )
 
 func ex1() {
-	time1 := time.Now()
-
+	timen := time.Now().UnixNano() / (int64(time.Millisecond) / int64(time.Nanosecond))
 	for i := 0; i < 3; i++ {
-
-		fmt.Println("time now: ", time1)
-		if i == 2 {
-			fmt.Println("ket thup")
-		}
 		time.Sleep(3 * time.Second)
+		fmt.Println("time now", timen)
+		if i == 3 {
+			fmt.Println("kết thúp")
+		}
 	}
 }
 
 func ex2() {
 	timeq := time.Now().Unix()
-	fmt.Println("Timestap hiện tại: ", timeq)
+	a := (((timeq / 60) / 60) / 24) / 7
+	fmt.Println("Số tuần: ", a)
 }
 
 func text(ctx context.Context) {
@@ -33,74 +32,81 @@ func ex3() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	for i := 0; i < 3; i++ {
-		fmt.Println("sleep: ", i+1)
-		text(ctx)
 		time.Sleep(3 * time.Second)
+		fmt.Println("sleep: ", i)
+		text(ctx)
 	}
 }
 
 func ex4() {
-	time1 := time.UnixMilli(1592190294764144364)
-	h, _ := time.ParseDuration(time1.String())
-	fmt.Println("Chuyển sang thời gian: ", time1)
-	fmt.Printf("Số phút: %f\n", h.Minutes())
+	mi := 1592190294764144364 / 60000000000
+	fmt.Println("So phut: ", int64(mi))
+	fmt.Println(time.Unix(int64(mi), 0))
 }
 
 func ex5() {
-	a := 1592190385
-	now := time.Unix(int64(a), 0)
-	fmt.Println(now)
-	t := now
-	fmt.Println(t.String())
+	a := 1592190385 / (60 * 60 * 24)
+	fmt.Println("So ngay: ", a)
+
 }
 
 func ex6() {
-	fmt.Println("Các mốc đơn vị: date, unix")
+	fmt.Println("Đơn vị: second, nanosecond")
 }
 
 func ex7() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	timenow := time.Now().Unix()
-	fmt.Println("Thời gian hiện tại:", timenow)
-	go x(ctx)
+	x(ctx)
+
+}
+
+func x(ctx context.Context) {
+	time1 := time.Now().UnixNano()
+	fmt.Println("Thời gian hiện tại:", time1)
 	time.Sleep(3 * time.Second)
-	fmt.Println("Thời gian sau 3s: ", x(ctx))
-	hieu := x(ctx) - timenow
+	time2 := time.Now().UnixNano()
+	fmt.Println("Thời gian sau 3s: ", time2)
+	hieu := time2 - time1
 	println("Hiệu thời gian sau 3s:", hieu)
 }
 
-func x(ctx context.Context) int64 {
-	time1 := time.Now().Unix()
-	return int64(time1)
+func test(a, quit chan int64) {
+	time11 := 1
+	y := "done"
+	for {
+		select {
+		case a <- int64(time11):
+			fmt.Printf("")
+		case <-quit:
+			fmt.Println(y)
+			return
+		}
+	}
 }
 
 func ex8() {
-	timenow := "${time.Now().Unix()}"
-	for n := 0; n < 5; {
-		fmt.Println("Time: ", timenow)
-		time.Sleep(100 * time.Millisecond)
-		n++
+	a := make(chan int64)
+	quit := make(chan int64)
+	go func() {
+		for i := 0; i < 1; i++ {
+			time.Sleep(100 * time.Millisecond)
+			fmt.Println("${time.Now().Unix()}")
+		}
+		quit <- 0
+	}()
+	test(a, quit)
 
-	}
 }
 
 func ex9() {
-	ch := make(chan int)
-	time.AfterFunc(100*time.Millisecond, func() {
-
-		ch <- 10
-	})
-	for {
-		select {
-		case i := <-ch:
-			fmt.Println("i'm study", i)
-			return
-		default:
-			fmt.Println("wait")
-			time.Sleep(1 * time.Second)
-		}
+	f := func() {
+		fmt.Println("i'm study")
 	}
+	D := time.Duration(100) * time.Millisecond
+	time1 := time.AfterFunc(D, f)
+	defer time1.Stop()
+	time.Sleep(2*time.Second)
 }
 
 func main() {
