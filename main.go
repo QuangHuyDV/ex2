@@ -29,7 +29,7 @@ func ex2() {
 // 3. Thực hiện 1 chương trình với 1 vòng lặp for và 3 lần sleep mỗi lần sleep 3sec Nhưng sau 3s thì kết thúc hàm đấy Sử dụng và tìm hiểu context. Nêu được tác dụng của context trong chương trình.
 func ex3() {
 	time.Sleep(1*time.Second)
-	ctx, cancel := context.WithTimeout(context.Background(), 6*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 9*time.Second)
 	defer cancel()
 	// time.Sleep(3 * time.Second)
 	for {
@@ -38,8 +38,9 @@ func ex3() {
 			fmt.Println("end")
 			return
 		default:
-			fmt.Println("waiting...")
 			time.Sleep(3 * time.Second)
+			fmt.Println("waiting...")
+			
 		}
 	}
 }
@@ -74,7 +75,7 @@ func ex7() {
 	ctx1 := context.WithValue(context.Background(), "ns", q)
 	ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 	defer cancel()
-	fmt.Println("Hiệu thời gian tính từ hiện tại: ")
+	fmt.Println("Hiệu thời gian tính từ hiện tại theo ns: ")
 	for {
 		select {
 		case <-ctx.Done():
